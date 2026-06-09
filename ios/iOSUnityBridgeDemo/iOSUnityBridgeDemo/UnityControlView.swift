@@ -1,5 +1,5 @@
 //
-//  ContentView.swift
+//  UnityControlView.swift
 //  iOSUnityBridgeDemo
 //
 //  Created by Roberto Teixeira on 09/06/2026.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ContentView: View {
+struct UnityControlView: View {
     var body: some View {
         VStack {
             Image(systemName: "globe")
@@ -20,5 +20,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    UnityControlView()
 }

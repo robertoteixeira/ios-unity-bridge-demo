@@ -11,7 +11,7 @@ import SwiftUI
 struct iOSUnityBridgeDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            UnityControlView()
         }
     }
 }
