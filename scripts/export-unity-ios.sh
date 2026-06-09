@@ -1,4 +1,6 @@
+cat > scripts/export-unity-ios.sh <<'EOF'
 #!/bin/bash
+
 set -e
 
 UNITY_PROJECT_PATH="unity/UnityBridgeDemo"
@@ -18,3 +20,4 @@ mkdir -p build
 
 echo "Placeholder only."
 echo "Later this script will call Unity in batch mode to export the iOS project."
+EOF
