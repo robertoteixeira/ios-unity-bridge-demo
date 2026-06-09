@@ -1,0 +1,67 @@
+# macOS
+.DS_Store
+
+# Xcode
+DerivedData/
+*.xcuserstate
+xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcuserdata/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# CocoaPods
+Pods/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output/
+
+# Unity generated files
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Unity IDE
+.vs/
+.gradle/
+ExportedObj/
+.consulo/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+
+# Unity crash logs
+sysinfo.txt
+
+# Unity generated iOS build
+build/
+unity-ios-export/
+
+# UnityFramework copied artifacts
+ios/**/UnityFramework.framework
+ios/**/UnityFramework.framework.meta
+ios/**/Data/
+
+# Archives
+*.xcarchive
+*.ipa
+
+# Secrets / local config
+.env
+.env.local
