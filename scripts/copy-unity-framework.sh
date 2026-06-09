@@ -1,4 +1,3 @@
-cat > scripts/copy-unity-framework.sh <<'EOF'
 #!/bin/bash
 
 set -e
@@ -26,4 +25,3 @@ fi
 
 echo "Placeholder only."
 echo "Later this script will copy UnityFramework and Data into the native iOS app."
-EOF
