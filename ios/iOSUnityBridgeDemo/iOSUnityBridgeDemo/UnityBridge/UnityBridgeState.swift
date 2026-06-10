@@ -24,8 +24,8 @@ enum UnityBridgeState: Equatable {
             return "Loaded"
         case .unloading:
             return "Unloading"
-        case .failed:
-            return "Failed"
+        case .failed(let error):
+            return "Failed: \(error)"
         }
     }
 
