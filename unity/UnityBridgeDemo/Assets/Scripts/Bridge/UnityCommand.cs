@@ -1,9 +1,15 @@
 using System;
-using System.Collections.Generic;
 
 [Serializable]
 public class UnityCommand
 {
     public string type;
-    public Dictionary<string, string> payload;
+    public UnityCommandPayload payload;
+}
+
+[Serializable]
+public class UnityCommandPayload
+{
+    public string color;
+    public string speed;
 }
