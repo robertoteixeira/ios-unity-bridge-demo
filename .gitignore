@@ -68,3 +68,9 @@ ios/**/Data/
 
 # VS Code
 .vscode/
+
+# IDE / generated solution files
+*.sln
+*.slnx
+*.csproj
+*.unityproj

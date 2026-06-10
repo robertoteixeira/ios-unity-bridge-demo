@@ -8,7 +8,7 @@ public class IOSBridgeSender : MonoBehaviour
     private static extern void SendMessageToIOS(string message);
 #endif
 
-    public void SendMessage(string type, string payload = "{}")
+    public void SendEvent(string type, string payload = "{}")
     {
         string message = $"{{\"type\":\"{type}\",\"payload\":{payload}}}";
 
