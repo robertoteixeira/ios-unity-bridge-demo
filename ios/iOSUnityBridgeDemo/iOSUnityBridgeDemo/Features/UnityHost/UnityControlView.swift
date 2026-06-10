@@ -83,7 +83,6 @@ struct UnityControlView: View {
             .disabled(!isUnityLoaded)
             
             Button {
-                isUnityLoaded = false
                 addLog("Command sent: change cube color")
             } label: {
                 Text("Change Cube Color")
@@ -93,7 +92,6 @@ struct UnityControlView: View {
             .disabled(!isUnityLoaded)
             
             Button {
-                isUnityLoaded = false
                 addLog("Command sent: start cube rotation")
             } label: {
                 Text("Start Rotation")
@@ -103,7 +101,6 @@ struct UnityControlView: View {
             .disabled(!isUnityLoaded)
             
             Button {
-                isUnityLoaded = false
                 addLog("Command sent: stop cube color")
             } label: {
                 Text("Stop Rotation")
