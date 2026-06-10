@@ -499,6 +499,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 90
+  bridgeSender: {fileID: 2034746485}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
