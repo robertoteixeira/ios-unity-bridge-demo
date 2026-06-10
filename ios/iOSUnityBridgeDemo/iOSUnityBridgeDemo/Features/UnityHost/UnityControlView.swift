@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct UnityControlView: View {
-    @State private var isUnityLoaded = false
-    @State private var eventLogs: [String] = [
-        "Native iOS shell started"
-    ]
+    @StateObject private var bridge = MockUnityBridge()
     
     var body: some View {
         NavigationStack {
@@ -48,9 +45,9 @@ struct UnityControlView: View {
             HStack {
                 Circle()
                     .frame(width: 12, height: 12)
-                    .foregroundStyle(isUnityLoaded ? .green : .red)
+                    .foregroundStyle(statusColor)
                 
-                Text(isUnityLoaded ? "Loaded" : "Not Loaded")
+                Text(bridge.state.title)
                     .font(.subheadline)
             }
         }
@@ -63,51 +60,49 @@ struct UnityControlView: View {
     private var controlsView: some View {
         VStack(spacing: 12) {
             Button {
-                isUnityLoaded = true
-                addLog("Load Unity requested")
+                bridge.loadUnity()
             } label: {
                 Text("Load Unity")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(isUnityLoaded)
+            .disabled(!bridge.state.canLoad)
             
             Button {
-                isUnityLoaded = false
-                addLog("Unload Unity requested")
+                bridge.unloadUnity()
             } label: {
                 Text("Unload Unity")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!isUnityLoaded)
+            .disabled(!bridge.state.canUnload)
             
             Button {
-                addLog("Command sent: change cube color")
+                bridge.sendCommand(.changeColor("blue"))
             } label: {
                 Text("Change Cube Color")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!isUnityLoaded)
+            .disabled(!bridge.state.canSendCommand)
             
             Button {
-                addLog("Command sent: start cube rotation")
+                bridge.sendCommand(.startRotation())
             } label: {
                 Text("Start Rotation")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!isUnityLoaded)
+            .disabled(!bridge.state.canSendCommand)
             
             Button {
-                addLog("Command sent: stop cube color")
+                bridge.sendCommand(.stopRotation())
             } label: {
                 Text("Stop Rotation")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!isUnityLoaded)
+            .disabled(!bridge.state.canSendCommand)
         }
     }
     
@@ -118,8 +113,8 @@ struct UnityControlView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(eventLogs.indices, id: \.self) { index in
-                        Text(eventLogs[index])
+                    ForEach(bridge.events) { event in
+                        Text("[\(event.formattedTime)] \(event.displayMessage)")
                             .font(.caption)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(8)
@@ -133,9 +128,17 @@ struct UnityControlView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private func addLog(_ message: String) {
-        let timestamp = Date.now.formatted(date: .omitted, time: .standard)
-        eventLogs.insert("[\(timestamp)] \(message)", at: 0)
+    private var statusColor: Color {
+        switch bridge.state {
+        case .notLoaded:
+            return .red
+        case .loading, .unloading:
+            return .orange
+        case .loaded:
+            return .green
+        case .failed:
+            return .red
+        }
     }
 }
 
