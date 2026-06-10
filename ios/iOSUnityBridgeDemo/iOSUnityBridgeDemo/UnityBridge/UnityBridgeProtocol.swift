@@ -7,12 +7,8 @@
 
 import Foundation
 
-@MainActor
-protocol UnityBridgeProtocol: ObservableObject {
-    var state: UnityBridgeState { get }
-    var events: [UnityEvent] { get }
-
-    func loadUnity()
-    func unloadUnity()
-    func sendCommand(_ command: UnityCommand)
+protocol UnityBridgeProtocol {
+    func loadUnity() async throws
+    func unloadUnity() async throws
+    func sendCommand(_ command: UnityCommand) async throws
 }

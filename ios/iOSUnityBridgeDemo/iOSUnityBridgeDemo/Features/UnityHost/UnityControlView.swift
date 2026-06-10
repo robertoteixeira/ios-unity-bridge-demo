@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct UnityControlView: View {
-    @StateObject private var bridge = MockUnityBridge()
+    @StateObject private var viewModel = UnityControlViewModel()
     
     var body: some View {
         NavigationStack {
@@ -47,7 +47,7 @@ struct UnityControlView: View {
                     .frame(width: 12, height: 12)
                     .foregroundStyle(statusColor)
                 
-                Text(bridge.state.title)
+                Text(viewModel.state.title)
                     .font(.subheadline)
             }
         }
@@ -60,49 +60,49 @@ struct UnityControlView: View {
     private var controlsView: some View {
         VStack(spacing: 12) {
             Button {
-                bridge.loadUnity()
+                viewModel.loadUnity()
             } label: {
                 Text("Load Unity")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.borderedProminent)
-            .disabled(!bridge.state.canLoad)
+            .disabled(!viewModel.state.canLoad)
             
             Button {
-                bridge.unloadUnity()
+                viewModel.unloadUnity()
             } label: {
                 Text("Unload Unity")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!bridge.state.canUnload)
+            .disabled(!viewModel.state.canUnload)
             
             Button {
-                bridge.sendCommand(.changeColor("blue"))
+                viewModel.sendCommand(.changeColor("blue"))
             } label: {
                 Text("Change Cube Color")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!bridge.state.canSendCommand)
+            .disabled(!viewModel.state.canSendCommand)
             
             Button {
-                bridge.sendCommand(.startRotation())
+                viewModel.sendCommand(.startRotation())
             } label: {
                 Text("Start Rotation")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!bridge.state.canSendCommand)
+            .disabled(!viewModel.state.canSendCommand)
             
             Button {
-                bridge.sendCommand(.stopRotation())
+                viewModel.sendCommand(.stopRotation())
             } label: {
                 Text("Stop Rotation")
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(.bordered)
-            .disabled(!bridge.state.canSendCommand)
+            .disabled(!viewModel.state.canSendCommand)
         }
     }
     
@@ -113,7 +113,7 @@ struct UnityControlView: View {
             
             ScrollView {
                 VStack(alignment: .leading, spacing: 8) {
-                    ForEach(bridge.events) { event in
+                    ForEach(viewModel.events) { event in
                         Text("[\(event.formattedTime)] \(event.displayMessage)")
                             .font(.caption)
                             .frame(maxWidth: .infinity, alignment: .leading)
@@ -129,7 +129,7 @@ struct UnityControlView: View {
     }
     
     private var statusColor: Color {
-        switch bridge.state {
+        switch viewModel.state {
         case .notLoaded:
             return .red
         case .loading, .unloading:
