@@ -9,63 +9,125 @@ public class IOSBridgeReceiver : MonoBehaviour
     {
         Debug.Log($"[IOSBridgeReceiver] Received command: {message}");
 
-        if (message.Contains("\"changeColor\""))
+        if (cubeController == null)
         {
-            string color = ExtractValue(message, "color", "blue");
-            cubeController.ChangeColor(color);
-            bridgeSender.SendEvent("statusResponse", $"{{\"currentColor\":\"{color}\"}}");
+            bridgeSender.SendEvent("error", "{\"message\":\"CubeController is not assigned\"}");
             return;
         }
 
-        if (message.Contains("\"startRotation\""))
+        if (bridgeSender == null)
         {
-            cubeController.StartRotation();
-            bridgeSender.SendEvent("rotationStarted", "{\"speed\":\"1.0\"}");
+            Debug.LogError("[IOSBridgeReceiver] IOSBridgeSender is not assigned");
             return;
         }
 
-        if (message.Contains("\"stopRotation\""))
+        UnityCommand command;
+
+        try
         {
-            cubeController.StopRotation();
-            bridgeSender.SendEvent("rotationStopped");
+            command = JsonUtility.FromJson<UnityCommand>(message);
+        }
+        catch
+        {
+            bridgeSender.SendEvent("error", "{\"message\":\"Invalid command JSON\"}");
             return;
         }
 
-        if (message.Contains("\"resetCube\""))
+        if (command == null || string.IsNullOrEmpty(command.type))
         {
-            cubeController.ResetCube();
-            bridgeSender.SendEvent("statusResponse", "{\"cube\":\"reset\"}");
+            bridgeSender.SendEvent("error", "{\"message\":\"Command type is missing\"}");
             return;
         }
 
-        if (message.Contains("\"requestStatus\""))
-        {
-            string status = cubeController.GetStatus();
-            bridgeSender.SendEvent("statusResponse", $"{{\"status\":\"{status}\"}}");
-            return;
-        }
-
-        bridgeSender.SendEvent("error", "{\"message\":\"Unknown command\"}");
+        HandleCommand(command);
     }
 
-    private string ExtractValue(string message, string key, string fallback)
+    private void HandleCommand(UnityCommand command)
     {
-        string pattern = $"\"{key}\":\"";
-        int startIndex = message.IndexOf(pattern);
-
-        if (startIndex < 0)
+        switch (command.type)
         {
-            return fallback;
+            case "changeColor":
+                HandleChangeColor(command);
+                break;
+
+            case "startRotation":
+                HandleStartRotation(command);
+                break;
+
+            case "stopRotation":
+                HandleStopRotation();
+                break;
+
+            case "resetCube":
+                HandleResetCube();
+                break;
+
+            case "requestStatus":
+                HandleRequestStatus();
+                break;
+
+            default:
+                bridgeSender.SendEvent(
+                    "error",
+                    $"{{\"message\":\"Unknown command: {command.type}\"}}"
+                );
+                break;
+        }
+    }
+
+    private void HandleChangeColor(UnityCommand command)
+    {
+        string color = command.payload?.color;
+
+        if (string.IsNullOrEmpty(color))
+        {
+            color = "blue";
         }
 
-        startIndex += pattern.Length;
-        int endIndex = message.IndexOf("\"", startIndex);
+        cubeController.ChangeColor(color);
+        bridgeSender.SendEvent(
+            "statusResponse",
+            $"{{\"currentColor\":\"{color}\"}}"
+        );
+    }
 
-        if (endIndex < 0)
+    private void HandleStartRotation(UnityCommand command)
+    {
+        string speed = command.payload?.speed;
+
+        if (string.IsNullOrEmpty(speed))
         {
-            return fallback;
+            speed = "1.0";
         }
 
-        return message.Substring(startIndex, endIndex - startIndex);
+        cubeController.StartRotation();
+        bridgeSender.SendEvent(
+            "rotationStarted",
+            $"{{\"speed\":\"{speed}\"}}"
+        );
+    }
+
+    private void HandleStopRotation()
+    {
+        cubeController.StopRotation();
+        bridgeSender.SendEvent("rotationStopped");
+    }
+
+    private void HandleResetCube()
+    {
+        cubeController.ResetCube();
+        bridgeSender.SendEvent("statusResponse", "{\"cube\":\"reset\"}");
+    }
+
+    private void HandleRequestStatus()
+    {
+        string status = cubeController.GetStatus();
+
+        status = status.Replace("\"", "\\\"");
+
+        bridgeSender.SendEvent(
+            "statusResponse",
+            $"{{\"status\":\"{status}\"}}"
+        );
     }
 }
