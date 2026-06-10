@@ -65,3 +65,6 @@ ios/**/Data/
 # Secrets / local config
 .env
 .env.local
+
+# VS Code
+.vscode/
