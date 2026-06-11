@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		03843D832FDAD881008BFA8C /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03843D822FDAD881008BFA8C /* UnityFramework.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		032FBC222FD8BD5A0028E7C6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -27,6 +31,7 @@
 		032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSUnityBridgeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		032FBC212FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUnityBridgeDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		032FBC2B2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUnityBridgeDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		03843D822FDAD881008BFA8C /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UnityFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -52,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03843D832FDAD881008BFA8C /* UnityFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +84,7 @@
 				032FBC162FD8BD580028E7C6 /* iOSUnityBridgeDemo */,
 				032FBC242FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests */,
 				032FBC2E2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests */,
+				03843D812FDAD881008BFA8C /* Frameworks */,
 				032FBC152FD8BD580028E7C6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +97,14 @@
 				032FBC2B2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		03843D812FDAD881008BFA8C /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				03843D822FDAD881008BFA8C /* UnityFramework.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
