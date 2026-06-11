@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		03843D832FDAD881008BFA8C /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03843D822FDAD881008BFA8C /* UnityFramework.framework */; };
+		03843D852FDAD943008BFA8C /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 03843D842FDAD943008BFA8C /* Data */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +33,7 @@
 		032FBC212FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUnityBridgeDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		032FBC2B2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUnityBridgeDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03843D822FDAD881008BFA8C /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UnityFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		03843D842FDAD943008BFA8C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = "../../build/unity-ios-export/Data"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -81,6 +83,7 @@
 		032FBC0B2FD8BD580028E7C6 = {
 			isa = PBXGroup;
 			children = (
+				03843D842FDAD943008BFA8C /* Data */,
 				032FBC162FD8BD580028E7C6 /* iOSUnityBridgeDemo */,
 				032FBC242FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests */,
 				032FBC2E2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests */,
@@ -227,6 +230,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				03843D852FDAD943008BFA8C /* Data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
