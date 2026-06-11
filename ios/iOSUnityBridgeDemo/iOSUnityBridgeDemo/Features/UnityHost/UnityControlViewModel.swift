@@ -18,6 +18,10 @@ final class UnityControlViewModel: ObservableObject {
 
     init(bridge: any UnityBridgeProtocol) {
         self.bridge = bridge
+        
+        UnityEventReceiver.shared.setEventHandler { [weak self] message in
+            self?.handleUnityMessage(message)
+        }
     }
     
     convenience init(useMockBridge: Bool = false) {
@@ -84,6 +88,13 @@ final class UnityControlViewModel: ObservableObject {
         events.insert(
             UnityEvent(type: type, payload: payload),
             at: 0
+        )
+    }
+    
+    private func handleUnityMessage(_ message: String) {
+        addEvent(
+            .statusResponse,
+            payload: ["message": message]
         )
     }
 }
