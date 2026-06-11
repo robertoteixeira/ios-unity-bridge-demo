@@ -18,6 +18,5 @@ public class IOSBridgeSender : MonoBehaviour
         Debug.Log($"[IOSBridgeSender] {message}");
 #endif
 
-
     }
 }
