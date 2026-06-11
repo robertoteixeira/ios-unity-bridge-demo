@@ -69,9 +69,11 @@ struct UnityFloatingControlsView: View {
     }
 }
 
-#Preview {
-    UnityFloatingControlsView(
-        onSendCommand: { _ in },
-        onClose: {}
-    )
+struct UnityFloatingControlsView_Previews: PreviewProvider {
+    static var previews: some View {
+        UnityFloatingControlsView(
+            onSendCommand: { _ in },
+            onClose: {}
+        )
+    }
 }

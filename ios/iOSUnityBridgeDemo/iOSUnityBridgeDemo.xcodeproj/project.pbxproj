@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		032D24D62FDB6A0100D32740 /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 03843D842FDAD943008BFA8C /* Data */; };
 		03843D852FDAD943008BFA8C /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 03843D842FDAD943008BFA8C /* Data */; };
 		039CECEA2FDB408700242C36 /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039CECE02FDADC3200242C36 /* UnityFramework.framework */; };
 		039CECEB2FDB408700242C36 /* UnityFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 039CECE02FDADC3200242C36 /* UnityFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -30,6 +31,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		032D24D72FDB6A0100D32740 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		039CECEC2FDB408700242C36 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -44,17 +55,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSUnityBridgeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		032D24DC2FDB6A0100D32740 /* iOSUnityBridgeDemoPreview.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSUnityBridgeDemoPreview.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemoUnity.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSUnityBridgeDemoUnity.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		032FBC212FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUnityBridgeDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		032FBC2B2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUnityBridgeDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		03843D822FDAD881008BFA8C /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UnityFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		03843D822FDAD881008BFA8C /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = "../../build/unity-derived-data/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/UnityFramework.framework"; sourceTree = "<group>"; };
 		03843D842FDAD943008BFA8C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = "../../build/unity-ios-export/Data"; sourceTree = "<group>"; };
-		039CECE02FDADC3200242C36 /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UnityFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		039CECE02FDADC3200242C36 /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = "../../build/unity-derived-data/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)/UnityFramework.framework"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		032D24DD2FDB6A0100D32740 /* Exceptions for "iOSUnityBridgeDemo" folder in "iOSUnityBridgeDemoPreview" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				UnityBridge/UnityFrameworkBridge.swift,
+				UnityBridge/UnityFrameworkLoader.swift,
+			);
+			target = 032D24D12FDB6A0100D32740 /* iOSUnityBridgeDemoPreview */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		032FBC162FD8BD580028E7C6 /* iOSUnityBridgeDemo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				032D24DD2FDB6A0100D32740 /* Exceptions for "iOSUnityBridgeDemo" folder in "iOSUnityBridgeDemoPreview" target */,
+			);
 			path = iOSUnityBridgeDemo;
 			sourceTree = "<group>";
 		};
@@ -71,6 +97,13 @@
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		032D24D32FDB6A0100D32740 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		032FBC112FD8BD580028E7C6 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -111,9 +144,10 @@
 		032FBC152FD8BD580028E7C6 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemo.app */,
+				032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemoUnity.app */,
 				032FBC212FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests.xctest */,
 				032FBC2B2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests.xctest */,
+				032D24DC2FDB6A0100D32740 /* iOSUnityBridgeDemoPreview.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -130,9 +164,32 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemo */ = {
+		032D24D12FDB6A0100D32740 /* iOSUnityBridgeDemoPreview */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 032FBC352FD8BD5A0028E7C6 /* Build configuration list for PBXNativeTarget "iOSUnityBridgeDemo" */;
+			buildConfigurationList = 032D24D92FDB6A0100D32740 /* Build configuration list for PBXNativeTarget "iOSUnityBridgeDemoPreview" */;
+			buildPhases = (
+				032D24D22FDB6A0100D32740 /* Sources */,
+				032D24D32FDB6A0100D32740 /* Frameworks */,
+				032D24D52FDB6A0100D32740 /* Resources */,
+				032D24D72FDB6A0100D32740 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				032FBC162FD8BD580028E7C6 /* iOSUnityBridgeDemo */,
+			);
+			name = iOSUnityBridgeDemoPreview;
+			packageProductDependencies = (
+			);
+			productName = iOSUnityBridgeDemo;
+			productReference = 032D24DC2FDB6A0100D32740 /* iOSUnityBridgeDemoPreview.app */;
+			productType = "com.apple.product-type.application";
+		};
+		032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemoUnity */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 032FBC352FD8BD5A0028E7C6 /* Build configuration list for PBXNativeTarget "iOSUnityBridgeDemoUnity" */;
 			buildPhases = (
 				032FBC102FD8BD580028E7C6 /* Sources */,
 				032FBC112FD8BD580028E7C6 /* Frameworks */,
@@ -146,11 +203,11 @@
 			fileSystemSynchronizedGroups = (
 				032FBC162FD8BD580028E7C6 /* iOSUnityBridgeDemo */,
 			);
-			name = iOSUnityBridgeDemo;
+			name = iOSUnityBridgeDemoUnity;
 			packageProductDependencies = (
 			);
 			productName = iOSUnityBridgeDemo;
-			productReference = 032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemo.app */;
+			productReference = 032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemoUnity.app */;
 			productType = "com.apple.product-type.application";
 		};
 		032FBC202FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests */ = {
@@ -236,7 +293,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemo */,
+				032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemoUnity */,
+				032D24D12FDB6A0100D32740 /* iOSUnityBridgeDemoPreview */,
 				032FBC202FD8BD5A0028E7C6 /* iOSUnityBridgeDemoTests */,
 				032FBC2A2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests */,
 			);
@@ -244,6 +302,14 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		032D24D52FDB6A0100D32740 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				032D24D62FDB6A0100D32740 /* Data in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		032FBC122FD8BD580028E7C6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -269,6 +335,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		032D24D22FDB6A0100D32740 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		032FBC102FD8BD580028E7C6 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -295,17 +368,79 @@
 /* Begin PBXTargetDependency section */
 		032FBC232FD8BD5A0028E7C6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemo */;
+			target = 032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemoUnity */;
 			targetProxy = 032FBC222FD8BD5A0028E7C6 /* PBXContainerItemProxy */;
 		};
 		032FBC2D2FD8BD5A0028E7C6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemo */;
+			target = 032FBC132FD8BD580028E7C6 /* iOSUnityBridgeDemoUnity */;
 			targetProxy = 032FBC2C2FD8BD5A0028E7C6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		032D24DA2FDB6A0100D32740 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QUFDSU77H7;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.roberto.iOSUnityBridgeDemo;
+				PRODUCT_MODULE_NAME = iOSUnityBridgeDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		032D24DB2FDB6A0100D32740 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QUFDSU77H7;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.6;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.roberto.iOSUnityBridgeDemo;
+				PRODUCT_MODULE_NAME = iOSUnityBridgeDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		032FBC332FD8BD5A0028E7C6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -439,6 +574,10 @@
 				DEVELOPMENT_TEAM = QUFDSU77H7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../build/unity-derived-data/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
+				);
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -451,7 +590,9 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.roberto.iOSUnityBridgeDemo;
+				PRODUCT_MODULE_NAME = iOSUnityBridgeDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = UNITY_ENABLED;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOSUnityBridgeDemo/App/iOSUnityBridgeDemo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -469,6 +610,10 @@
 				DEVELOPMENT_TEAM = QUFDSU77H7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../../build/unity-derived-data/Build/Products/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)",
+				);
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -481,7 +626,9 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.roberto.iOSUnityBridgeDemo;
+				PRODUCT_MODULE_NAME = iOSUnityBridgeDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = UNITY_ENABLED;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "iOSUnityBridgeDemo/App/iOSUnityBridgeDemo-Bridging-Header.h";
 				"SWIFT_OBJC_BRIDGING_HEADER[arch=*]" = "";
@@ -505,7 +652,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOSUnityBridgeDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOSUnityBridgeDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOSUnityBridgeDemoUnity.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOSUnityBridgeDemoUnity";
 			};
 			name = Debug;
 		};
@@ -524,7 +671,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOSUnityBridgeDemo.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOSUnityBridgeDemo";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOSUnityBridgeDemoUnity.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/iOSUnityBridgeDemoUnity";
 			};
 			name = Release;
 		};
@@ -541,7 +688,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = iOSUnityBridgeDemo;
+				TEST_TARGET_NAME = iOSUnityBridgeDemoUnity;
 			};
 			name = Debug;
 		};
@@ -558,13 +705,22 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = iOSUnityBridgeDemo;
+				TEST_TARGET_NAME = iOSUnityBridgeDemoUnity;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		032D24D92FDB6A0100D32740 /* Build configuration list for PBXNativeTarget "iOSUnityBridgeDemoPreview" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				032D24DA2FDB6A0100D32740 /* Debug */,
+				032D24DB2FDB6A0100D32740 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		032FBC0F2FD8BD580028E7C6 /* Build configuration list for PBXProject "iOSUnityBridgeDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -574,7 +730,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		032FBC352FD8BD5A0028E7C6 /* Build configuration list for PBXNativeTarget "iOSUnityBridgeDemo" */ = {
+		032FBC352FD8BD5A0028E7C6 /* Build configuration list for PBXNativeTarget "iOSUnityBridgeDemoUnity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				032FBC362FD8BD5A0028E7C6 /* Debug */,

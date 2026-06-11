@@ -11,7 +11,19 @@ import SwiftUI
 struct iOSUnityBridgeDemoApp: App {
     var body: some Scene {
         WindowGroup {
-            UnityControlView()
+#if UNITY_ENABLED
+            UnityControlView(
+                viewModel: UnityControlViewModel(
+                    bridge: UnityFrameworkBridge()
+                )
+            )
+#else
+            UnityControlView(
+                viewModel: UnityControlViewModel(
+                    bridge: MockUnityBridge()
+                )
+            )
+#endif
         }
     }
 }

@@ -75,15 +75,17 @@ struct UnityControlsView: View {
     }
 }
 
-#Preview {
-    UnityControlsView(
-        state: .loaded,
-        onLoadUnity: {},
-        onUnloadUnity: {},
-        onChangeCubeColor: {},
-        onStartRotation: {},
-        onStopRotation: {},
-        onRequestStatus: {}
-    )
-    .padding()
+struct UnityControlsView_Previews: PreviewProvider {
+    static var previews: some View {
+        UnityControlsView(
+            state: .loaded,
+            onLoadUnity: {},
+            onUnloadUnity: {},
+            onChangeCubeColor: {},
+            onStartRotation: {},
+            onStopRotation: {},
+            onRequestStatus: {}
+        )
+        .padding()
+    }
 }

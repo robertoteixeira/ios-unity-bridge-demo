@@ -28,7 +28,11 @@ final class UnityControlViewModel: ObservableObject {
         if useMockBridge {
             self.init(bridge: MockUnityBridge())
         } else {
+#if UNITY_ENABLED
             self.init(bridge: UnityFrameworkBridge())
+#else
+            self.init(bridge: MockUnityBridge())
+#endif
         }
     }
 

@@ -33,13 +33,15 @@ struct UnityEventLogView: View {
     }
 }
 
-#Preview {
-    UnityEventLogView(
-        events: [
-            UnityEvent(type: .nativeShellStarted),
-            UnityEvent(type: .unityLoaded),
-            UnityEvent(type: .commandSent, payload: ["command": "changeColor"])
-        ]
-    )
-    .padding()
+struct UnityEventLogView_Previews: PreviewProvider {
+    static var previews: some View {
+        UnityEventLogView(
+            events: [
+                UnityEvent(type: .nativeShellStarted),
+                UnityEvent(type: .unityLoaded),
+                UnityEvent(type: .commandSent, payload: ["command": "changeColor"])
+            ]
+        )
+        .padding()
+    }
 }

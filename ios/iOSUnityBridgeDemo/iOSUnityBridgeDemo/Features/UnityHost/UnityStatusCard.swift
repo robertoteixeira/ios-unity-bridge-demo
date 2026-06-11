@@ -44,13 +44,15 @@ struct UnityStatusCard: View {
     }
 }
 
-#Preview {
-    VStack {
-        UnityStatusCard(state: .notLoaded)
-        UnityStatusCard(state: .loading)
-        UnityStatusCard(state: .loaded)
-        UnityStatusCard(state: .unloading)
-        UnityStatusCard(state: .failed("Preview error"))
+struct UnityStatusCard_Previews: PreviewProvider {
+    static var previews: some View {
+        VStack {
+            UnityStatusCard(state: .notLoaded)
+            UnityStatusCard(state: .loading)
+            UnityStatusCard(state: .loaded)
+            UnityStatusCard(state: .unloading)
+            UnityStatusCard(state: .failed("Preview error"))
+        }
+        .padding()
     }
-    .padding()
 }

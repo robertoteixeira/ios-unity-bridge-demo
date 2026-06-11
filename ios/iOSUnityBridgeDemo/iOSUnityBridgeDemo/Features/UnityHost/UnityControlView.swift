@@ -8,7 +8,17 @@
 import SwiftUI
 
 struct UnityControlView: View {
-    @StateObject private var viewModel = UnityControlViewModel()
+    @StateObject private var viewModel: UnityControlViewModel
+
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: UnityControlViewModel())
+    }
+
+    @MainActor
+    init(viewModel: UnityControlViewModel) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+    }
 
     var body: some View {
         NavigationStack {
@@ -62,6 +72,8 @@ struct UnityControlView: View {
     }
 }
 
-#Preview {
-    UnityControlView()
+struct UnityControlView_Previews: PreviewProvider {
+    static var previews: some View {
+        UnityControlView()
+    }
 }
