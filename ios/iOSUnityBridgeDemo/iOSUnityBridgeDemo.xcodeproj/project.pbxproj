@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		03843D832FDAD881008BFA8C /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03843D822FDAD881008BFA8C /* UnityFramework.framework */; };
 		03843D852FDAD943008BFA8C /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 03843D842FDAD943008BFA8C /* Data */; };
+		039CECE12FDADC3200242C36 /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039CECE02FDADC3200242C36 /* UnityFramework.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +34,7 @@
 		032FBC2B2FD8BD5A0028E7C6 /* iOSUnityBridgeDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = iOSUnityBridgeDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		03843D822FDAD881008BFA8C /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UnityFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		03843D842FDAD943008BFA8C /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = "../../build/unity-ios-export/Data"; sourceTree = "<group>"; };
+		039CECE02FDADC3200242C36 /* UnityFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = UnityFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -59,7 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03843D832FDAD881008BFA8C /* UnityFramework.framework in Frameworks */,
+				039CECE12FDADC3200242C36 /* UnityFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,6 +106,7 @@
 		03843D812FDAD881008BFA8C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				039CECE02FDADC3200242C36 /* UnityFramework.framework */,
 				03843D822FDAD881008BFA8C /* UnityFramework.framework */,
 			);
 			name = Frameworks;

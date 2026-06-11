@@ -5,6 +5,6 @@
       location = "container:iOSUnityBridgeDemo.xcodeproj">
    </FileRef>
    <FileRef
-      location = "absolute:/Users/robertoteixeira/Dev/Projects/Personal/iOS/ios-unity-bridge-demo/build/unity-ios-export/Unity-iPhone.xcodeproj">
+      location = "group:../../build/unity-ios-export/Unity-iPhone.xcodeproj">
    </FileRef>
 </Workspace>
