@@ -92,6 +92,8 @@ final class UnityControlViewModel: ObservableObject {
     }
     
     private func handleUnityMessage(_ message: String) {
+        print("[UnityControlViewModel] Received Unity message: \(message)")
+        
         addEvent(
             .statusResponse,
             payload: ["message": message]
