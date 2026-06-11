@@ -38,18 +38,6 @@ final class UnityControlViewModel: ObservableObject {
 
                 state = .loaded
                 addEvent(.unityLoaded)
-                
-                try await Task.sleep(for: .seconds(1))
-                try await bridge.sendCommand(.changeColor("blue"))
-                addEvent(.commandSent, payload: ["command": "changeColor"])
-                
-                try await Task.sleep(for: .seconds(1))
-                try await bridge.sendCommand(.startRotation())
-                addEvent(.commandSent, payload: ["command": "startRotation"])
-                
-                try await Task.sleep(for: .seconds(2))
-                try await bridge.sendCommand(.stopRotation())
-                addEvent(.commandSent, payload: ["command": "stopRotation"])
             } catch {
                 state = .failed(error.localizedDescription)
                 addEvent(.error, payload: ["message": error.localizedDescription])
