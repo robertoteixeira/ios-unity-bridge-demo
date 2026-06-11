@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import UIKit
+import MachO
 
 @MainActor
 final class UnityFrameworkLoader {
@@ -53,23 +55,45 @@ final class UnityFrameworkLoader {
         return framework
     }
     
-    enum UnityFrameworkLoaderError: LocalizedError {
-        case frameworkBundleNotFound
-        case invalidFrameworkBundle
-        case principalClassNotFound
-        case instanceNotFound
+    func runEmbeddedUnity() throws {
+        let framework = try loadUnityFramework()
         
-        var errorDescription: String? {
-            switch self {
-            case .frameworkBundleNotFound:
-                return "UnityFramework bundle was not found inside the app."
-            case .invalidFrameworkBundle:
-                return "UnityFramework bundle could not be created."
-            case .principalClassNotFound:
-                return "UnityFramework principal class was not found."
-            case .instanceNotFound:
-                return "UnityFramework instance could not be created."
-            }
+        if framework.appController() == nil {
+            framework.runEmbedded(
+                withArgc: CommandLine.argc,
+                argv: CommandLine.unsafeArgv,
+                appLaunchOpts: nil
+            )
+        } else {
+            framework.showUnityWindow()
+        }
+    }
+   
+    func unloadUnity() {
+        unityFramework?.unloadApplication()
+    }
+}
+
+private let machHeader: UnsafePointer<mach_header> = {
+   _dyld_get_image_header(0)
+}()
+
+enum UnityFrameworkLoaderError: LocalizedError {
+    case frameworkBundleNotFound
+    case invalidFrameworkBundle
+    case principalClassNotFound
+    case instanceNotFound
+    
+    var errorDescription: String? {
+        switch self {
+        case .frameworkBundleNotFound:
+            return "UnityFramework bundle was not found inside the app."
+        case .invalidFrameworkBundle:
+            return "UnityFramework bundle could not be created."
+        case .principalClassNotFound:
+            return "UnityFramework principal class was not found."
+        case .instanceNotFound:
+            return "UnityFramework instance could not be created."
         }
     }
 }
