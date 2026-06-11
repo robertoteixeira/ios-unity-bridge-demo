@@ -42,6 +42,15 @@ final class UnityControlViewModel: ObservableObject {
 
                 state = .loaded
                 addEvent(.unityLoaded)
+                
+                UnityOverlayWindowManager.shared.show(
+                    onSendCommand: { [weak self] command in
+                        self?.sendCommand(command)
+                    },
+                    onClose: { [weak self] in
+                        self?.unloadUnity()
+                    }
+                )
             } catch {
                 state = .failed(error.localizedDescription)
                 addEvent(.error, payload: ["message": error.localizedDescription])
@@ -54,6 +63,8 @@ final class UnityControlViewModel: ObservableObject {
             do {
                 addEvent(.unityUnloadRequested)
                 state = .unloading
+                
+                UnityOverlayWindowManager.shared.hide()
 
                 try await bridge.unloadUnity()
 

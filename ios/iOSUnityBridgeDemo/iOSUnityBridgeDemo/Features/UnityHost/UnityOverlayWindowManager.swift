@@ -37,7 +37,7 @@ final class UnityOverlayWindowManager {
         )
             
         let hostingController = UIHostingController(rootView: overlayView)
-        hostingController.view.backgroundColor = Color.clear
+        hostingController.view.backgroundColor = .clear
         
         let window = UIWindow(windowScene: windScene)
         window.rootViewController = hostingController
