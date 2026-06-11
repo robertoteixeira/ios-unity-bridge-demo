@@ -16,11 +16,11 @@ final class UnityFrameworkBridge: UnityBridgeProtocol {
     }
     
     func loadUnity() async throws {
-        _ = try loader.loadUnityFramework()
+        try loader.runEmbeddedUnity()
     }
     
     func unloadUnity() async throws {
-        // Real unload will be implemented after Unity is actually running.
+        loader.unloadUnity()
     }
     
     func sendCommand(_ command: UnityCommand) async throws {
