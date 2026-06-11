@@ -8,7 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		03843D852FDAD943008BFA8C /* Data in Resources */ = {isa = PBXBuildFile; fileRef = 03843D842FDAD943008BFA8C /* Data */; };
-		039CECE12FDADC3200242C36 /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039CECE02FDADC3200242C36 /* UnityFramework.framework */; };
+		039CECEA2FDB408700242C36 /* UnityFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 039CECE02FDADC3200242C36 /* UnityFramework.framework */; };
+		039CECEB2FDB408700242C36 /* UnityFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 039CECE02FDADC3200242C36 /* UnityFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,6 +28,20 @@
 			remoteInfo = iOSUnityBridgeDemo;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		039CECEC2FDB408700242C36 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				039CECEB2FDB408700242C36 /* UnityFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		032FBC142FD8BD580028E7C6 /* iOSUnityBridgeDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSUnityBridgeDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				039CECE12FDADC3200242C36 /* UnityFramework.framework in Frameworks */,
+				039CECEA2FDB408700242C36 /* UnityFramework.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -122,6 +137,7 @@
 				032FBC102FD8BD580028E7C6 /* Sources */,
 				032FBC112FD8BD580028E7C6 /* Frameworks */,
 				032FBC122FD8BD580028E7C6 /* Resources */,
+				039CECEC2FDB408700242C36 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);

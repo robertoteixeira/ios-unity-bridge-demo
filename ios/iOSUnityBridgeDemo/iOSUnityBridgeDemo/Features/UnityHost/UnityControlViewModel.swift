@@ -10,13 +10,22 @@ import Foundation
 @MainActor
 final class UnityControlViewModel: ObservableObject {
     @Published private(set) var state: UnityBridgeState = .notLoaded
-    @Published private(set) var events: [UnityEvent] = []
+    @Published private(set) var events: [UnityEvent] = [
+        UnityEvent(type: .nativeShellStarted)
+    ]
 
     private let bridge: any UnityBridgeProtocol
 
-    init(bridge: any UnityBridgeProtocol = MockUnityBridge()) {
+    init(bridge: any UnityBridgeProtocol) {
         self.bridge = bridge
-        events = [UnityEvent(type: .nativeShellStarted)]
+    }
+    
+    convenience init(useMockBridge: Bool = false) {
+        if useMockBridge {
+            self.init(bridge: MockUnityBridge())
+        } else {
+            self.init(bridge: UnityFrameworkBridge())
+        }
     }
 
     func loadUnity() {
