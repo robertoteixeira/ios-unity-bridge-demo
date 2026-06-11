@@ -21,7 +21,7 @@ final class UnityFrameworkBridge: UnityBridgeProtocol {
     }
     
     func unloadUnity() async throws {
-        loader.unloadUnity()
+        await loader.unloadUnity()
     }
     
     func sendCommand(_ command: UnityCommand) async throws {

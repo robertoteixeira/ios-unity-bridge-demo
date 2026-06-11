@@ -10,12 +10,17 @@ import UIKit
 import MachO
 
 @MainActor
-final class UnityFrameworkLoader {
+final class UnityFrameworkLoader: NSObject, UnityFrameworkListener {
     static let shared = UnityFrameworkLoader()
     
     private var unityFramework: UnityFramework?
+    private var didRegisterFrameworkListener = false
+    private var isUnloading = false
+    private var unloadContinuations: [CheckedContinuation<Void, Never>] = []
     
-    private init() {}
+    private override init() {
+        super.init()
+    }
     
     var isLoaded: Bool {
         unityFramework != nil
@@ -52,30 +57,100 @@ final class UnityFrameworkLoader {
         }
         
         unityFramework = framework
+        registerFrameworkListenerIfNeeded(on: framework)
         return framework
     }
     
     func runEmbeddedUnity() throws {
-        let framework = try loadUnityFramework()
-        
-        if framework.appController() == nil {
-            framework.runEmbedded(
-                withArgc: CommandLine.argc,
-                argv: CommandLine.unsafeArgv,
-                appLaunchOpts: nil
-            )
-        } else {
-            framework.showUnityWindow()
+        guard !isUnloading else {
+            throw UnityFrameworkLoaderError.unloadInProgress
         }
+
+        let framework = try loadUnityFramework()
+        framework.setExecuteHeader(machHeader)
+        framework.runEmbedded(
+            withArgc: CommandLine.argc,
+            argv: CommandLine.unsafeArgv,
+            appLaunchOpts: nil
+        )
     }
    
-    func unloadUnity() {
-        unityFramework?.unloadApplication()
+    func unloadUnity() async {
+        guard let unityFramework else {
+            return
+        }
+
+        if isUnloading {
+            await waitForUnload()
+            return
+        }
+
+        isUnloading = true
+
+        await withCheckedContinuation { continuation in
+            unloadContinuations.append(continuation)
+            unityFramework.pause(true)
+            unityFramework.unloadApplication()
+            hideUnityWindow(from: unityFramework)
+        }
+    }
+
+    nonisolated func unityDidUnload(_ notification: Notification) {
+        Task { @MainActor in
+            self.handleUnityDidUnload()
+        }
+    }
+
+    private func handleUnityDidUnload() {
+        guard isUnloading else {
+            return
+        }
+
+        if let unityFramework {
+            hideUnityWindow(from: unityFramework)
+        }
+
+        isUnloading = false
+        unityFramework = nil
+        resumeUnloadContinuations()
+    }
+
+    private func waitForUnload() async {
+        await withCheckedContinuation { continuation in
+            unloadContinuations.append(continuation)
+        }
+    }
+
+    private func hideUnityWindow(from unityFramework: UnityFramework) {
+        guard let unityWindow = unityFramework.appController()?.window else {
+            return
+        }
+
+        unityWindow.isHidden = true
+    }
+
+    private func registerFrameworkListenerIfNeeded(on unityFramework: UnityFramework) {
+        guard !didRegisterFrameworkListener else {
+            return
+        }
+
+        unityFramework.register(self)
+        didRegisterFrameworkListener = true
+    }
+
+    private func resumeUnloadContinuations() {
+        let continuations = unloadContinuations
+        unloadContinuations.removeAll()
+
+        continuations.forEach { continuation in
+            continuation.resume()
+        }
     }
 }
 
-private let machHeader: UnsafePointer<mach_header> = {
-   _dyld_get_image_header(0)
+private let machHeader: UnsafePointer<MachHeader> = {
+    UnsafeRawPointer(_dyld_get_image_header(0))
+        .assumingMemoryBound(to: MachHeader.self)
 }()
 
 enum UnityFrameworkLoaderError: LocalizedError {
@@ -83,6 +158,7 @@ enum UnityFrameworkLoaderError: LocalizedError {
     case invalidFrameworkBundle
     case principalClassNotFound
     case instanceNotFound
+    case unloadInProgress
     
     var errorDescription: String? {
         switch self {
@@ -94,6 +170,8 @@ enum UnityFrameworkLoaderError: LocalizedError {
             return "UnityFramework principal class was not found."
         case .instanceNotFound:
             return "UnityFramework instance could not be created."
+        case .unloadInProgress:
+            return "Unity is still unloading. Please try again in a moment."
         }
     }
 }

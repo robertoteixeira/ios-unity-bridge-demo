@@ -13,8 +13,21 @@ final class UnityOverlayWindowManager {
     static let shared = UnityOverlayWindowManager()
     
     private var overlayWindow: UIWindow?
+    private weak var hostWindow: UIWindow?
     
     private init() {}
+
+    func captureHostWindow() {
+        guard hostWindow == nil else {
+            return
+        }
+
+        hostWindow = activeWindowScene?
+            .windows
+            .first { window in
+                window.isKeyWindow && window !== overlayWindow
+            }
+    }
     
     func show(
         onSendCommand: @escaping (UnityCommand) -> Void,
@@ -24,10 +37,7 @@ final class UnityOverlayWindowManager {
             return
         }
         
-        guard let windScene = UIApplication.shared.connectedScenes
-            .compactMap({ $0 as? UIWindowScene })
-            .first(where: { $0.activationState == .foregroundActive })
-        else {
+        guard let windScene = activeWindowScene else {
             return
         }
         
@@ -43,7 +53,7 @@ final class UnityOverlayWindowManager {
         window.rootViewController = hostingController
         window.windowLevel = .alert + 1
         window.backgroundColor = .clear
-        window.isHidden = false
+        window.makeKeyAndVisible()
         
         overlayWindow = window
     }
@@ -51,5 +61,17 @@ final class UnityOverlayWindowManager {
     func hide() {
         overlayWindow?.isHidden = true
         overlayWindow = nil
+    }
+
+    func restoreHostWindow() {
+        hostWindow?.isHidden = false
+        hostWindow?.makeKeyAndVisible()
+        hostWindow = nil
+    }
+
+    private var activeWindowScene: UIWindowScene? {
+        UIApplication.shared.connectedScenes
+            .compactMap { $0 as? UIWindowScene }
+            .first { $0.activationState == .foregroundActive }
     }
 }

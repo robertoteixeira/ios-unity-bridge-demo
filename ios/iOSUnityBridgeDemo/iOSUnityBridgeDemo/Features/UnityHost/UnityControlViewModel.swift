@@ -41,6 +41,7 @@ final class UnityControlViewModel: ObservableObject {
             do {
                 addEvent(.unityLoadRequested)
                 state = .loading
+                UnityOverlayWindowManager.shared.captureHostWindow()
 
                 try await bridge.loadUnity()
 
@@ -71,10 +72,12 @@ final class UnityControlViewModel: ObservableObject {
                 UnityOverlayWindowManager.shared.hide()
 
                 try await bridge.unloadUnity()
+                UnityOverlayWindowManager.shared.restoreHostWindow()
 
                 state = .notLoaded
                 addEvent(.unityUnloaded)
             } catch {
+                UnityOverlayWindowManager.shared.restoreHostWindow()
                 state = .failed(error.localizedDescription)
                 addEvent(.error, payload: ["message": error.localizedDescription])
             }
