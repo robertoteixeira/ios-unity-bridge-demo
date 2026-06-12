@@ -1,283 +1,234 @@
 # iOS Unity Bridge
 
-This document describes how the native iOS app and Unity communicate with each other.
+This document describes the message contract between Swift and Unity.
 
-The bridge exists to keep both sides independent:
+The bridge moves JSON strings in two directions:
 
-- iOS owns platform services, navigation, lifecycle, APIs, and native UI.
-- Unity owns the 3D scene, rendering, and immersive interaction.
-- The bridge only routes messages between both sides.
+```text
+iOS -> Unity: commands
+Unity -> iOS: events
+```
 
-## Communication Overview
+The bridge should stay generic. Product behavior should live in Swift view models, native services, or Unity scene controllers.
 
-There are two communication directions:
+## Message Envelope
 
-1. iOS sends commands to Unity.
-2. Unity sends events back to iOS.
+Use a small JSON object:
+
+```json
+{
+  "type": "command_or_event_name",
+  "payload": {
+    "key": "value"
+  }
+}
+```
+
+Rules:
+
+- `type` is required.
+- `payload` should be present, even when empty.
+- Keep payloads simple.
+- Prefer strings, numbers, booleans, and small objects.
+- Version the message type when changing behavior in a breaking way.
 
 ## iOS to Unity
 
-The native iOS app sends commands to Unity through UnityFramework.
+Swift sends commands through `UnityFramework.sendMessageToGO`.
 
-A Swift button or native event creates a command, encodes it as a string, and sends it to a known Unity GameObject.
+Current Swift target:
+
+```text
+GameObject: IOSBridgeReceiver
+Method: ReceiveCommand
+Parameter: one string
+```
 
 Flow:
 
-    SwiftUI button tap
-    -> UnityBridge
-    -> UnityFramework sendMessageToGO
-    -> IOSBridgeReceiver GameObject
-    -> ReceiveCommand method in C#
-    -> Unity scene updates
+```text
+SwiftUI button tap
+-> UnityControlViewModel
+-> UnityFrameworkBridge
+-> UnityFrameworkLoader
+-> UnityFramework.sendMessageToGO
+-> IOSBridgeReceiver.ReceiveCommand(string message)
+-> Unity scene controller
+```
 
-Example commands:
+Example command:
 
-    changeColor
-    startRotation
-    stopRotation
-    resetCube
-    requestStatus
+```json
+{
+  "type": "changeColor",
+  "payload": {
+    "color": "blue"
+  }
+}
+```
 
-Example message format:
+Current demo commands:
 
-    {
-      "type": "changeColor",
-      "payload": {
-        "color": "red"
-      }
-    }
-
-The Unity side should expose a receiver object with a stable name, for example:
-
-    IOSBridgeReceiver
-
-And a public method that accepts one string parameter:
-
-    ReceiveCommand(string message)
-
-Important rule:
-
-    The GameObject name and C# method name must match exactly what iOS sends.
+| Command | Purpose |
+| --- | --- |
+| `changeColor` | Changes the demo cube color. |
+| `startRotation` | Starts cube rotation. |
+| `stopRotation` | Stops cube rotation. |
+| `resetCube` | Resets the cube. |
+| `requestStatus` | Asks Unity to report current state. |
 
 ## Unity to iOS
 
-Unity sends events back to iOS through a native iOS plugin.
-
-A Unity script detects an event, serializes it as a string, and calls a native function exposed by the iOS side.
+Unity sends events through a native iOS plugin.
 
 Flow:
 
-    Unity event
-    -> C# bridge sender
-    -> DllImport("__Internal")
-    -> Objective-C++ native function
-    -> Swift callback/event handler
-    -> SwiftUI event log updates
+```text
+Unity scene event
+-> IOSBridgeSender.SendEvent(...)
+-> DllImport("__Internal")
+-> NativeCallProxy.mm
+-> Swift callback
+-> UnityEventReceiver
+-> UnityControlViewModel
+-> SwiftUI event log
+```
 
-Example events:
+Current native function:
 
-    unityLoaded
-    cubeTapped
-    rotationStarted
-    rotationStopped
-    statusResponse
+```text
+SendMessageToIOS(string message)
+```
 
-Example message format:
+Example event:
 
-    {
-      "type": "cubeTapped",
-      "payload": {
-        "objectName": "DemoCube"
-      }
-    }
+```json
+{
+  "type": "statusResponse",
+  "payload": {
+    "currentColor": "blue"
+  }
+}
+```
 
-## Swift Bridge Responsibilities
+Current demo events:
 
-The Swift bridge should:
+| Event | Purpose |
+| --- | --- |
+| `statusResponse` | Unity reports scene state or command result. |
+| `rotationStarted` | Cube rotation started. |
+| `rotationStopped` | Cube rotation stopped. |
+| `error` | Unity could not handle a command. |
 
-- Load UnityFramework.
-- Keep a reference to the UnityFramework instance.
-- Send commands to Unity.
-- Receive Unity events.
-- Decode Unity event messages.
-- Publish events to the SwiftUI layer.
-- Handle basic lifecycle operations such as pause, resume, and unload.
+## Swift Side Contract
 
-The Swift bridge should not:
+Swift command model:
 
-- Contain Unity scene logic.
-- Contain business logic.
-- Know implementation details about cube behavior.
-- Directly manipulate Unity objects.
+```swift
+struct UnityCommand: Encodable {
+    let type: UnityCommand.CommandType
+    let payload: [String: String]
+}
+```
 
-## Unity Bridge Responsibilities
+The current bridge encodes commands with `JSONEncoder` and sends them to Unity:
 
-The Unity bridge should:
+```swift
+unityFramework.sendMessageToGO(
+    withName: "IOSBridgeReceiver",
+    functionName: "ReceiveCommand",
+    message: message
+)
+```
 
-- Receive command strings from iOS.
-- Decode command messages.
-- Route commands to Unity scene controllers.
-- Send events back to iOS.
-- Keep Unity scene behavior separated from native communication.
+When adapting the template, update command types in Swift and command handling in Unity together.
 
-The Unity bridge should not:
+## Unity Side Contract
 
-- Know about SwiftUI screens.
-- Handle native app navigation.
-- Own authentication, analytics, push notifications, or platform services.
+Unity receiver:
 
-## Message Design
+```csharp
+public void ReceiveCommand(string message)
+```
 
-Messages should be simple and explicit.
+Unity sender:
 
-Recommended structure:
+```csharp
+public void SendEvent(string type, string payload = "{}")
+```
 
-    {
-      "type": "command_or_event_name",
-      "payload": {
-        "key": "value"
-      }
-    }
+Unity iOS native plugin import:
 
-Why use a message object?
+```csharp
+#if UNITY_IOS && !UNITY_EDITOR
+[DllImport("__Internal")]
+private static extern void SendMessageToIOS(string message);
+#endif
+```
 
-- Easier to extend.
-- Easier to debug.
-- Easier to log.
-- Avoids creating many different native methods.
-- Keeps the bridge generic.
+Keep the `UNITY_IOS && !UNITY_EDITOR` guard. It allows the Unity project to keep running in the editor without trying to call an iOS-only native symbol.
 
-## Example iOS to Unity Commands
+## Naming Contract
 
-Change cube color:
+These names must match exactly:
 
-    {
-      "type": "changeColor",
-      "payload": {
-        "color": "blue"
-      }
-    }
+| Side | Name |
+| --- | --- |
+| Unity GameObject | `IOSBridgeReceiver` |
+| Unity method | `ReceiveCommand` |
+| Native plugin function | `SendMessageToIOS` |
+| Swift receiver function | Function called by `NativeCallProxy.mm` |
 
-Start cube rotation:
+If a message does not arrive, check names first.
 
-    {
-      "type": "startRotation",
-      "payload": {
-        "speed": "1.0"
-      }
-    }
+## Lifecycle Contract
 
-Stop cube rotation:
+The native side should only send commands when Unity is loaded.
 
-    {
-      "type": "stopRotation",
-      "payload": {}
-    }
+Important states:
 
-Reset cube:
+- Not loaded.
+- Loading.
+- Loaded.
+- Unloading.
+- Failed.
 
-    {
-      "type": "resetCube",
-      "payload": {}
-    }
+Unload is asynchronous. Do not assume `unloadApplication()` means Unity is already gone. Wait for `unityDidUnload`.
 
-Request Unity status:
+## Adding a New Command
 
-    {
-      "type": "requestStatus",
-      "payload": {}
-    }
+1. Add a command type in Swift.
+2. Add a button, native action, or service event that creates the command.
+3. Encode the command payload.
+4. Add a matching case in `IOSBridgeReceiver.cs`.
+5. Route the command to a Unity scene controller.
+6. Send a success, status, or error event back to iOS.
+7. Add the command to this document.
 
-## Example Unity to iOS Events
+## Adding a New Event
 
-Unity loaded:
+1. Add the event trigger in Unity.
+2. Call `IOSBridgeSender.SendEvent(...)`.
+3. Handle or display the event in Swift.
+4. Add the event to this document.
 
-    {
-      "type": "unityLoaded",
-      "payload": {
-        "scene": "MainScene"
-      }
-    }
+## Message Design Guidelines
 
-Cube tapped:
+- Prefer one generic bridge method over many native methods.
+- Keep messages easy to log.
+- Avoid sending large binary payloads through this bridge.
+- Avoid using bridge messages as a high-frequency game loop channel.
+- Keep command names stable once external users depend on them.
+- Add an event for errors instead of silently ignoring invalid commands.
 
-    {
-      "type": "cubeTapped",
-      "payload": {
-        "objectName": "DemoCube"
-      }
-    }
+## When Not to Use This Bridge
 
-Rotation started:
+Do not use this JSON bridge for:
 
-    {
-      "type": "rotationStarted",
-      "payload": {
-        "speed": "1.0"
-      }
-    }
+- Streaming large files.
+- Per-frame input.
+- High-frequency telemetry.
+- Texture or video transfer.
+- Native SDK calls that Unity does not need to know about.
 
-Rotation stopped:
-
-    {
-      "type": "rotationStopped",
-      "payload": {}
-    }
-
-Status response:
-
-    {
-      "type": "statusResponse",
-      "payload": {
-        "isRotating": "true",
-        "currentColor": "blue"
-      }
-    }
-
-## Lifecycle Notes
-
-Unity has its own lifecycle, and the native app must respect it.
-
-Important cases to handle:
-
-- App enters foreground.
-- App enters background.
-- Unity is loaded for the first time.
-- Unity is already loaded.
-- Unity is paused.
-- Unity is resumed.
-- Unity is unloaded.
-- Native view is dismissed while Unity is still active.
-
-The native app should avoid initializing Unity multiple times.
-
-## Debugging Tips
-
-If iOS commands do not reach Unity, check:
-
-- Unity is loaded.
-- The target GameObject exists in the active scene.
-- The GameObject name matches exactly.
-- The C# method name matches exactly.
-- The C# method is public.
-- The C# method accepts a single string parameter.
-
-If Unity events do not reach iOS, check:
-
-- The native plugin file is inside Assets/Plugins/iOS.
-- The C# function uses DllImport("__Internal").
-- The native function name matches the imported C# function.
-- The app is running on a real device build.
-- The native callback is correctly routed back to Swift.
-
-## Design Rule
-
-Keep the bridge boring.
-
-The bridge should be stable, small, and predictable.
-
-It should only move messages between iOS and Unity. The real behavior should live in the correct layer:
-
-    iOS = platform and native app behavior
-    Unity = 3D scene behavior
-    Bridge = communication only
+For those, design a dedicated native integration.

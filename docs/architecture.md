@@ -1,114 +1,207 @@
 # Architecture
 
-This project uses a hybrid architecture where the native iOS app owns platform-level concerns and Unity owns the 3D / immersive experience layer.
+This project uses a hybrid architecture:
 
-The goal is to keep a clear boundary between the native mobile shell and the Unity scene.
+```text
+Native iOS = app shell, platform services, lifecycle, navigation
+Unity      = scene, rendering, simulation, immersive interaction
+Bridge     = message routing between iOS and Unity
+```
 
-## High-Level Responsibilities
+The goal is to keep the boundary boring and explicit. The native app should not know how the Unity scene works internally, and Unity should not own native app navigation or platform services.
 
-### Native iOS App
+## High-Level Flow
 
-The native iOS app is responsible for:
+```text
+SwiftUI app starts
+-> user taps Load Unity
+-> Swift loads UnityFramework
+-> Unity shows its own UIWindow
+-> native overlay UIWindow shows floating controls
+-> iOS sends commands to Unity
+-> Unity sends events back to iOS
+-> user taps close
+-> iOS asks Unity to unload
+-> Unity reports unityDidUnload
+-> iOS restores the native host window
+```
 
-- App lifecycle
-- Navigation
-- SwiftUI screens
-- Loading Unity
-- Unloading Unity
-- Sending commands to Unity
-- Receiving events from Unity
-- Event logging
-- Future platform integrations such as:
-  - Authentication
-  - Push notifications
-  - Deep links
-  - Analytics
-  - REST APIs
+## Native iOS Responsibilities
 
-### Unity
+The native app owns:
 
-Unity is responsible for:
+- App lifecycle.
+- SwiftUI screens.
+- Native navigation.
+- Native controls over Unity.
+- Loading and unloading Unity.
+- Platform integrations.
+- Command encoding.
+- Event receiving.
+- Event logging.
 
-- 3D scene rendering
-- Cube behavior
-- Camera and lighting
-- Receiving commands from iOS
-- Sending events back to iOS
-- Handling Unity-side interaction
+Future production features should usually start on the native side when they involve:
 
-## Communication Flow
+- Authentication.
+- Push notifications.
+- Deep links.
+- Analytics.
+- Networking and API clients.
+- Native purchases.
+- Native settings.
+- Device permissions.
 
-### iOS to Unity
+## Unity Responsibilities
 
-Swift sends commands to Unity through the bridge layer.
+Unity owns:
 
-Flow:
+- Scene rendering.
+- Camera, lighting, input, and animation.
+- Scene state.
+- GameObject behavior.
+- Command handling after a message reaches Unity.
+- Events that originate from the Unity scene.
 
-    Swift button tap
-    -> UnityBridge
-    -> UnityFramework sendMessageToGO
-    -> C# receiver object
-    -> Unity scene update
+Unity should not directly own:
 
-Example:
+- Native navigation.
+- Authentication.
+- Push notifications.
+- Native analytics SDK setup.
+- App-wide networking.
 
-    iOS button: Change Cube Color
-    -> Swift creates command JSON
-    -> UnityBridge sends message to GameObject named IOSBridgeReceiver
-    -> IOSBridgeReceiver.cs receives the command
-    -> CubeController.cs updates the cube material
+## Bridge Responsibilities
 
-### Unity to iOS
+The bridge owns only communication:
 
-Unity sends events back to iOS through a native iOS plugin.
+- Load and unload `UnityFramework`.
+- Send string messages to Unity.
+- Receive string messages from Unity.
+- Encode and decode small message envelopes.
+- Forward messages to the correct layer.
 
-Flow:
+The bridge should not contain business logic or scene logic. If it starts making product decisions, it is doing too much.
 
-    Unity event
-    -> C# native plugin call
-    -> Objective-C++ bridge
-    -> Swift callback
-    -> SwiftUI event log
+## Important iOS Files
 
-Example:
+```text
+iOSUnityBridgeDemoApp.swift
+  Chooses UnityFrameworkBridge when UNITY_ENABLED is set.
+  Chooses MockUnityBridge otherwise.
 
-    User taps cube in Unity
-    -> CubeController.cs detects tap
-    -> IOSBridgeSender.cs sends event
-    -> Native iOS bridge receives event
-    -> SwiftUI event log displays "Cube tapped"
+UnityControlViewModel.swift
+  Coordinates loading, unloading, commands, and event log state.
 
-## Bridge Layer
+UnityFrameworkBridge.swift
+  Implements UnityBridgeProtocol using the real UnityFramework loader.
 
-The bridge layer is responsible only for communication.
+UnityFrameworkLoader.swift
+  Loads UnityFramework, starts Unity, unloads Unity, and listens for unityDidUnload.
 
-It should not contain business logic.
+UnityOverlayWindowManager.swift
+  Manages the floating controls window and restores the native host UIWindow.
 
-Its job is to:
+UnityEventReceiver.swift
+  Receives messages from the Objective-C++ plugin and forwards them to Swift.
+```
 
-- Encode Swift commands into messages Unity can understand
-- Send messages to Unity GameObjects
-- Receive Unity events
-- Decode Unity events into Swift models
-- Notify the SwiftUI layer
+## Important Unity Files
 
-## Design Rule
+```text
+IOSBridgeReceiver.cs
+  Receives JSON commands from iOS.
 
-Keep responsibilities separated:
+IOSBridgeSender.cs
+  Sends JSON events from Unity to iOS.
 
-    Native iOS = platform, navigation, lifecycle, services
-    Unity = 3D scene, rendering, immersive interaction
-    Bridge = message routing between both worlds
+NativeCallProxy.mm
+  Native plugin that passes Unity messages into Swift.
 
-## Why This Architecture Matters
+CubeController.cs
+  Demo scene behavior. Replace this with your own scene logic.
+```
 
-This mirrors a production hybrid mobile architecture where native mobile handles platform services and Unity handles immersive or game-like experiences.
+## Window Model
 
-This separation helps with:
+Unity embedded in iOS uses its own `UIWindow`.
 
-- Maintainability
-- Performance debugging
-- Testing
-- Team ownership
-- Clear boundaries between native and Unity code
-- Easier future integrations with APIs, analytics, push notifications, or AR features
+This repo manages three window concerns:
+
+1. The native app window.
+2. Unity's window.
+3. The floating native controls overlay window.
+
+Before Unity opens, the app captures the native host window. When Unity closes, the app restores that host window with `makeKeyAndVisible()`.
+
+The floating controls also use their own alert-level window. It is made key and visible so it can reliably receive taps even after Unity has taken window focus.
+
+## Unity Lifecycle Model
+
+The first Unity load is a cold start:
+
+- `UnityFramework` is loaded.
+- Unity runtime initializes.
+- Graphics and scripting systems start.
+- The scene is loaded.
+- Unity creates and shows its window.
+
+Later loads are warm reloads:
+
+- The Unity framework remains in the process.
+- Unity reloads from scene-less state.
+- Startup is much faster.
+
+Close uses `unloadApplication()`, not `quitApplication(...)`.
+
+That matters:
+
+- `unloadApplication()` partially unloads Unity and supports later reloads.
+- `quitApplication(...)` is a stronger app-level quit path and is usually not what an embedded template wants.
+
+## Async Unload
+
+Unity unload is not instant.
+
+The native side calls:
+
+```swift
+unityFramework.unloadApplication()
+```
+
+Unity later reports:
+
+```swift
+unityDidUnload(...)
+```
+
+The Swift loader uses continuations to turn that callback into an `async` unload operation. This keeps app state honest: the SwiftUI view model does not mark Unity as unloaded until Unity actually confirms unload.
+
+## Target Separation
+
+The project intentionally separates the native preview target from the Unity-enabled target.
+
+`iOSUnityBridgeDemoPreview`:
+
+- Does not import the Unity bridging header.
+- Does not compile `UnityFrameworkBridge.swift`.
+- Does not compile `UnityFrameworkLoader.swift`.
+- Uses `MockUnityBridge`.
+
+`iOSUnityBridgeDemoUnity`:
+
+- Sets `UNITY_ENABLED`.
+- Imports the Unity bridging header.
+- Compiles the real Unity bridge.
+- Links and embeds `UnityFramework.framework`.
+
+This separation keeps native SwiftUI iteration fast and avoids requiring a Unity export for every native UI build.
+
+## Design Rules
+
+- Keep the bridge small.
+- Use JSON message envelopes with explicit `type` values.
+- Keep GameObject names and method names stable.
+- Let iOS own platform services.
+- Let Unity own scene behavior.
+- Wait for Unity lifecycle callbacks instead of guessing.
+- Build native UI against the mock target whenever possible.
